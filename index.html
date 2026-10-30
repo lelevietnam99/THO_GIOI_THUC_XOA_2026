@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Chế độ No-Cache đảm bảo luôn tải phiên bản mới nhất trên GitHub Pages -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Cổng Ôn Tập Tổng Hợp - Phật Học Phổ Thông & Luật Nghi</title>
+    <style>
+        :root {
+            --gold: #ffd700;
+            --gold-glow: rgba(255, 215, 0, 0.35);
+            --cyan: #00f2fe;
+            --emerald: #00e676;
+            --card-bg: rgba(15, 23, 42, 0.78);
+            --border-glass: rgba(255, 255, 255, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #050814;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 16px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Nền Vũ Trụ Sao Chuyển Động */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        .hub-container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(14px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.65), 0 0 25px var(--gold-glow);
+            padding: 38px 30px;
+            text-align: center;
+        }
+
+        .badge-top {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: var(--gold);
+            padding: 5px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+            margin-bottom: 24px;
+        }
+
+        /* Thanh Tổng Tiến Độ 4 Phần */
+        .total-progress-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .total-progress-text {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .total-progress-track {
+            flex: 1;
+            min-width: 180px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .total-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold), var(--emerald));
+            transition: width 0.5s ease;
+        }
+
+        /* Lưới 4 Chuyên Đề */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .module-card {
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.9));
+            border: 1px solid var(--border-glass);
+            border-left: 4px solid var(--gold);
+            border-radius: 16px;
+            padding: 22px 20px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 18px var(--gold-glow);
+            background: linear-gradient(145deg, rgba(38, 52, 75, 0.95), rgba(20, 30, 55, 0.95));
+        }
+
+        /* Màu điểm nhấn riêng cho từng phần */
+        .module-card.part-1 { border-left-color: #ffd700; }
+        .module-card.part-2 { border-left-color: #00f2fe; }
+        .module-card.part-3 { border-left-color: #00e676; }
+        .module-card.part-4 { border-left-color: #ff9100; }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .part-tag {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--gold);
+        }
+
+        .file-tag {
+            font-size: 0.78rem;
+            color: #64748b;
+            font-family: monospace;
+        }
+
+        .module-title {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .module-desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .module-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.12);
+            font-size: 0.85rem;
+        }
+
+        .status-pill {
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        .enter-btn {
+            color: var(--gold);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .module-card:hover .enter-btn {
+            transform: translateX(4px);
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.88rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 680px) {
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .hub-container {
+                padding: 26px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div class="hub-container">
+    <div class="badge-top">Hệ Thống Ôn Tập & Trò Chơi Trí Tuệ</div>
+    <h1>CỔNG ÔN THI PHẬT HỌC PHỔ THÔNG</h1>
+    <p class="subtitle">Tổng hợp 4 chuyên đề trọng tâm: Lịch sử • Giáo lý • Luật học • Hiến chương & Quy chế</p>
+
+    <!-- Thanh tổng tiến độ tự động đồng bộ từ LocalStorage của 4 trang con -->
+    <div class="total-progress-box">
+        <span class="total-progress-text">🌟 Tổng tiến độ đã thuộc: <strong id="total-count" style="color: var(--gold);">0 / 95</strong> câu</span>
+        <div class="total-progress-track">
+            <div class="total-progress-fill" id="total-fill"></div>
+        </div>
+    </div>
+
+    <div class="module-grid">
+        <!-- Link 1: index1.html -->
+        <a href="index1.html" class="module-card part-1">
+            <div>
+                <div class="module-header">
+                    <span class="part-tag">Phần I • 30 Câu</span>
+                    <span class="file-tag">index1.html</span>
+                </div>
+                <div class="module-title">LỊCH SỬ ĐỨC PHẬT VÀ THÁNH CHÚNG</div>
+                <div class="module-desc">Đản sanh, xuất gia, thành đạo, chuyển pháp luân, nhập Niết-bàn và công hạnh chư vị Thánh đệ tử.</div>
+            </div>
+            <div class="module-footer">
+                <span class="status-pill" id="prog-1">Đã thuộc: 0 / 30 câu</span>
+                <span class="enter-btn">Vào ôn tập ▶</span>
+            </div>
+        </a>
+
+        <!-- Link 2: index2.html -->
+        <a href="index2.html" class="module-card part-2">
+            <div>
+                <div class="module-header">
+                    <span class="part-tag" style="color: var(--cyan);">Phần II • 30 Câu</span>
+                    <span class="file-tag">index2.html</span>
+                </div>
+                <div class="module-title">GIÁO LÝ PHẬT HỌC CĂN BẢN</div>
+                <div class="module-desc">Tam Bảo, Quy y, Sám hối, Vô thường, Thiểu dục tri túc, Nhân quả, Luân hồi, Thập thiện, Tứ nhiếp, Lục hòa, Tịnh độ.</div>
+            </div>
+            <div class="module-footer">
+                <span class="status-pill" id="prog-2">Đã thuộc: 0 / 30 câu</span>
+                <span class="enter-btn">Vào ôn tập ▶</span>
+            </div>
+        </a>
+
+        <!-- Link 3: index3.html -->
+        <a href="index3.html" class="module-card part-3">
+            <div>
+                <div class="module-header">
+                    <span class="part-tag" style="color: var(--emerald);">Phần III • 30 Câu</span>
+                    <span class="file-tag">index3.html</span>
+                </div>
+                <div class="module-title">LUẬT HỌC (GIỚI LUẬT – TỲ NI – OAI NGHI)</div>
+                <div class="module-desc">Mười giới Sa-di, Bát quan trai, các bài kệ Tỳ-ni nhật dụng, 24 môn Oai nghi thờ Thầy và Quy Sơn Cảnh Sách.</div>
+            </div>
+            <div class="module-footer">
+                <span class="status-pill" id="prog-3">Đã thuộc: 0 / 30 câu</span>
+                <span class="enter-btn">Vào ôn tập ▶</span>
+            </div>
+        </a>
+
+        <!-- Link 4: index4.html -->
+        <a href="index4.html" class="module-card part-4">
+            <div>
+                <div class="module-header">
+                    <span class="part-tag" style="color: #ff9100;">Phần IV • 5 Câu</span>
+                    <span class="file-tag">index4.html</span>
+                </div>
+                <div class="module-title">HIẾN CHƯƠNG GIÁO HỘI & QUY CHẾ TĂNG SỰ</div>
+                <div class="module-desc">Lịch sử thành lập GHPGVN (1981), Đệ nhất Pháp chủ, Chủ tịch HĐTS, 2 Văn phòng TW và Điều 43 Quy chế Ban Tăng sự.</div>
+            </div>
+            <div class="module-footer">
+                <span class="status-pill" id="prog-4">Đã thuộc: 0 / 5 câu</span>
+                <span class="enter-btn">Vào ôn tập ▶</span>
+            </div>
+        </a>
+    </div>
+
+    <footer>
+        Chúc bạn ôn luyện tinh tấn và đạt kết quả cao nhất trong kỳ khảo hạch!
+    </footer>
+</div>
+
+<script>
+// Đọc tiến độ đã lưu từ 4 trang con trong LocalStorage
+function loadHubProgress() {
+    const getCount = (key) => {
+        try {
+            const arr = JSON.parse(localStorage.getItem(key) || '[]');
+            return Array.isArray(arr) ? arr.length : 0;
+        } catch (e) {
+            return 0;
+        }
+    };
+
+    const c1 = getCount('sadi_lichsu_mastered');
+    const c2 = getCount('sadi_giaoly_mastered');
+    const c3 = getCount('sadi_luat_mastered');
+    const c4 = getCount('sadi_hienchuong_mastered');
+    const total = c1 + c2 + c3 + c4;
+
+    document.getElementById('prog-1').innerText = `Đã thuộc: ${c1} / 30 câu`;
+    document.getElementById('prog-2').innerText = `Đã thuộc: ${c2} / 30 câu`;
+    document.getElementById('prog-3').innerText = `Đã thuộc: ${c3} / 30 câu`;
+    document.getElementById('prog-4').innerText = `Đã thuộc: ${c4} / 5 câu`;
+
+    document.getElementById('total-count').innerText = `${total} / 95`;
+    document.getElementById('total-fill').style.width = `${(total / 95) * 100}%`;
+}
+
+// Hiệu ứng Nền Vũ Trụ Sao Chuyển Động (Canvas)
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function initStars() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({ length: 180 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.6 + 0.3,
+        speed: Math.random() * 0.35 + 0.08
+    }));
+}
+
+function animateStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+        s.y -= s.speed;
+        if (s.y < 0) {
+            s.y = canvas.height;
+            s.x = Math.random() * canvas.width;
+        }
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.4 + Math.abs(Math.sin(Date.now() * 0.001 + s.x)) * 0.6})`;
+        ctx.fill();
+    });
+    requestAnimationFrame(animateStars);
+}
+
+window.addEventListener('resize', initStars);
+window.addEventListener('pageshow', loadHubProgress);
+
+window.onload = () => {
+    initStars();
+    animateStars();
+    loadHubProgress();
+};
+</script>
+</body>
+</html>

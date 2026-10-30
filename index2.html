@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Chế độ No-Cache đảm bảo luôn tải bản mới nhất trên GitHub Pages -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Ôn Thi Phần II: Giáo Lý Căn Bản (30 Câu)</title>
+    <style>
+        :root {
+            --gold: #ffd700;
+            --gold-glow: rgba(255, 215, 0, 0.35);
+            --cyan: #00f2fe;
+            --emerald: #00e676;
+            --crimson: #ff5252;
+            --card-bg: rgba(15, 23, 42, 0.82);
+            --border-glass: rgba(255, 255, 255, 0.14);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #050814;
+            color: #e2e8f0;
+            line-height: 1.65;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Vũ Trụ Sao Chuyển Động */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 25px 18px 60px;
+        }
+
+        header {
+            text-align: center;
+            padding: 28px 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px var(--gold-glow);
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            color: var(--gold);
+            font-size: 1.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        /* Thanh Tiến Độ Thuộc Bài */
+        .mastery-bar-wrap {
+            margin-top: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            min-width: 200px;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold), var(--emerald));
+            transition: width 0.4s ease;
+        }
+
+        /* Điều hướng Chế độ (Tabs) */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(30, 41, 59, 0.8);
+            color: #cbd5e1;
+            border: 1px solid var(--border-glass);
+            padding: 12px 22px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--gold);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.22), rgba(0, 242, 254, 0.18));
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 18px var(--gold-glow);
+        }
+
+        .mode-section { display: none; }
+        .mode-section.active { display: block; animation: fadeIn 0.35s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Công cụ tìm kiếm và lọc trong Chế độ Đề Cương */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid var(--border-glass);
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-size: 0.98rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--gold);
+        }
+
+        /* Danh sách thẻ Câu Hỏi */
+        .qa-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .qa-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-left: 4px solid var(--gold);
+            border-radius: 14px;
+            padding: 18px 20px;
+            transition: all 0.25s ease;
+        }
+
+        .qa-card.mastered {
+            border-left-color: var(--emerald);
+            background: rgba(16, 42, 45, 0.75);
+        }
+
+        .qa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .qa-question {
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .master-toggle {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #cbd5e1;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .qa-card.mastered .master-toggle {
+            background: rgba(0, 230, 118, 0.2);
+            border-color: var(--emerald);
+            color: var(--emerald);
+        }
+
+        .qa-answer {
+            color: #f1f5f9;
+            font-size: 1rem;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.12);
+        }
+
+        .qa-answer.hidden-ans {
+            filter: blur(6px);
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .qa-answer.hidden-ans:hover {
+            filter: blur(3px);
+        }
+
+        .keyword-box {
+            margin-top: 10px;
+            display: inline-block;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--cyan);
+        }
+
+        strong.hl {
+            color: #00ffcc;
+            font-weight: 700;
+        }
+
+        .law-box {
+            background: rgba(255, 215, 0, 0.07);
+            border-left: 3px solid var(--gold);
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        /* CHẾ ĐỘ FLASHCARD 3D */
+        .flashcard-wrapper {
+            max-width: 720px;
+            margin: 10px auto;
+            text-align: center;
+        }
+
+        .flashcard-scene {
+            width: 100%;
+            height: 440px;
+            perspective: 1200px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flashcard-scene.is-flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(145deg, rgba(20, 30, 55, 0.94), rgba(10, 15, 30, 0.96));
+            border: 2px solid var(--gold);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+            overflow-y: auto;
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+            border-color: var(--cyan);
+        }
+
+        .fc-badge {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 14px;
+        }
+
+        .fc-Controls {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        /* CHẾ ĐỘ TRÒ CHƠI ĐẤU TRƯỜNG TRÍ TUỆ */
+        .game-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--border-glass);
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .game-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.45);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .quiz-question-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 18px;
+            border-left: 4px solid var(--cyan);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .opt-btn {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: var(--gold);
+            transform: translateX(4px);
+        }
+
+        .opt-btn.correct {
+            background: rgba(0, 230, 118, 0.25) !important;
+            border-color: var(--emerald) !important;
+            color: #fff !important;
+            font-weight: 700;
+        }
+
+        .opt-btn.wrong {
+            background: rgba(255, 82, 82, 0.25) !important;
+            border-color: var(--crimson) !important;
+            color: #ffb4b4 !important;
+        }
+
+        .feedback-box {
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(0, 242, 254, 0.1);
+            border-left: 4px solid var(--cyan);
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        /* Cấu hình In A4 Ngang (@media print) */
+        @media print {
+            @page { size: A4 landscape; margin: 12mm; }
+            body { background: #fff !important; color: #000 !important; }
+            #starfield, .nav-tabs, .toolbar, .master-toggle, .mastery-bar-wrap { display: none !important; }
+            .container { max-width: 100%; padding: 0; margin: 0; }
+            header { box-shadow: none; border: 1px solid #000; background: #fff; color: #000; padding: 10px; margin-bottom: 15px; }
+            header h1 { color: #000; text-shadow: none; font-size: 1.35rem; }
+            .mode-section { display: none !important; }
+            #mode-study { display: block !important; }
+            .qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            .qa-card { background: #fff !important; border: 1px solid #444 !important; page-break-inside: avoid; padding: 10px; }
+            .qa-question { color: #000 !important; font-size: 0.95rem; }
+            .qa-answer { color: #111 !important; filter: none !important; font-size: 0.9rem; }
+            strong.hl, .keyword-box, .law-box { color: #000 !important; border-color: #666 !important; background: #f5f5f5 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div class="container">
+    <header>
+        <h1>II. GIÁO LÝ CĂN BẢN (30 CÂU)</h1>
+        <p>Đề cương Ôn tập Khảo hạch Giới tử | Hệ thống Ôn luyện & Trò chơi Trí tuệ</p>
+        
+        <div class="mastery-bar-wrap">
+            <span>🎯 Tiến độ thuộc bài: <strong id="mastery-count" style="color: var(--gold);">0 / 30</strong> câu</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="mastery-fill"></div>
+            </div>
+            <button class="action-btn" onclick="resetMastery()" style="padding: 5px 12px; font-size: 0.82rem;">Đặt lại tiến độ</button>
+        </div>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchMode('study', this)">📖 Đề Cương Chi Tiết (30 Câu)</button>
+        <button class="tab-btn" onclick="switchMode('flashcard', this)">🃏 Thẻ Nhớ Flashcard 3D</button>
+        <button class="tab-btn" onclick="switchMode('game', this)">🎮 Game Thử Thách (30 Câu Hỏi Xoáy)</button>
+    </div>
+
+    <!-- CHẾ ĐỘ 1: ĐỀ CƯƠNG CHI TIẾT -->
+    <section id="mode-study" class="mode-section active">
+        <div class="toolbar">
+            <input type="text" id="search-box" class="search-input" placeholder="🔍 Tìm kiếm nhanh (Tam Bảo, Sám hối, Vô thường, Nhân quả, Thập thiện, Lục hòa...)" oninput="renderStudyList()">
+            <button class="action-btn" id="btn-toggle-ans" onclick="toggleAllAnswers()">🙈 Ẩn đáp án để tự dò bài</button>
+            <button class="action-btn" onclick="filterUnmastered()" id="btn-filter-unmastered">📌 Chỉ hiện câu chưa thuộc</button>
+            <button class="action-btn" onclick="window.print()">🖨️ In A4 Ngang</button>
+        </div>
+        <div class="qa-grid" id="study-container"></div>
+    </section>
+
+    <!-- CHẾ ĐỘ 2: FLASHCARD 3D -->
+    <section id="mode-flashcard" class="mode-section">
+        <div class="flashcard-wrapper">
+            <div class="flashcard-scene" id="fc-scene" onclick="flipCard()">
+                <div class="flashcard-inner">
+                    <div class="flashcard-face flashcard-front">
+                        <div class="fc-badge" id="fc-counter">CÂU 1 / 30 (Nhấp vào thẻ hoặc nhấn phím Space để lật)</div>
+                        <h3 id="fc-question" style="color: var(--gold); font-size: 1.32rem; margin-bottom: 18px;"></h3>
+                        <div class="keyword-box" id="fc-hint"></div>
+                    </div>
+                    <div class="flashcard-face flashcard-back">
+                        <div class="fc-badge" style="color: var(--cyan);">ĐÁP ÁN CHI TIẾT</div>
+                        <div id="fc-answer" style="font-size: 1rem; text-align: left; max-width: 96%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="fc-Controls">
+                <button class="action-btn" onclick="prevCard()">◀ Câu trước</button>
+                <button class="action-btn" onclick="flipCard()" style="border-color: var(--gold); color: var(--gold);">🔄 Lật thẻ</button>
+                <button class="action-btn" onclick="toggleCurrentCardMastery()" id="fc-master-btn">✅ Đánh dấu Đã thuộc</button>
+                <button class="action-btn" onclick="randomCard()">🎲 Ngẫu nhiên</button>
+                <button class="action-btn" onclick="nextCard()">Câu tiếp ▶</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHẾ ĐỘ 3: TRÒ CHƠI THỬ THÁCH -->
+    <section id="mode-game" class="mode-section">
+        <div class="game-panel">
+            <div class="game-stats">
+                <div class="stat-box">
+                    <div>Thử thách</div>
+                    <div class="stat-val" id="game-q-num">1 / 30</div>
+                </div>
+                <div class="stat-box">
+                    <div>Điểm số</div>
+                    <div class="stat-val" id="game-score" style="color: var(--emerald);">0</div>
+                </div>
+                <div class="stat-box">
+                    <div>Chuỗi đúng (Streak)</div>
+                    <div class="stat-val" id="game-streak" style="color: var(--cyan);">🔥 0</div>
+                </div>
+                <div class="stat-box">
+                    <div>Kỷ lục</div>
+                    <div class="stat-val" id="game-best">0</div>
+                </div>
+            </div>
+
+            <div id="game-play-area">
+                <div class="quiz-question-box" id="quiz-question"></div>
+                <div class="options-grid" id="quiz-options"></div>
+                <div class="feedback-box" id="quiz-feedback"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button class="action-btn" onclick="startNewGame()">🔄 Chơi lại từ đầu (Xáo trộn câu)</button>
+                    <button class="action-btn" id="btn-next-quiz" onclick="nextQuizQuestion()" style="display: none; background: rgba(0, 230, 118, 0.25); border-color: var(--emerald);">Câu tiếp theo ▶</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+// Dữ liệu 30 câu hỏi chính thức trong Đề cương Phần II: Giáo Lý
+const QA_DATA = [
+    {
+        id: 1,
+        q: "Câu 1. Chữ “Đạo” có những nghĩa nào? Nghĩa rốt ráo của chữ “Đạo” trong danh từ “Đạo Phật” là gì?",
+        a: "<strong>• Ba nghĩa của chữ \"Đạo\":</strong><br>1. <strong class='hl'>Con đường:</strong> như nhân đạo, thiên đạo, địa ngục đạo, súc sanh đạo v.v...<br>2. <strong class='hl'>Bổn phận:</strong> như đạo thầy trò, đạo vợ chồng, đạo làm người v.v...<br>3. <strong class='hl'>Chân lý tuyệt đối, cái sáng suốt sẵn có nơi mỗi chúng sanh:</strong> còn gọi là tánh Phật, Chân như... Chúng ta thường hiểu chữ Đạo trong Phật giáo theo nghĩa này.<br><div class='law-box'><strong>• Nghĩa của chữ \"Đạo\" trong danh từ \"Đạo Phật\" (Sách trang 1, Bài 1):</strong><br>1. Là <strong class='hl'>con đường đưa chúng sanh từ mê lầm tới giác ngộ</strong>, từ đau khổ tới an vui.<br>2. Là <strong class='hl'>phương pháp sống</strong> sao cho cuộc sống có ý nghĩa và hạnh phúc ngay trong hiện tại, không cần chờ đợi ở cõi khác hoặc đời kiếp nào khác.</div>",
+        kw: "3 nghĩa: Con đường, Bổn phận, Chân lý tuyệt đối (tánh Phật) • Đạo Phật: Con đường từ mê đến giác & phương pháp sống hạnh phúc hiện tại"
+    },
+    {
+        id: 2,
+        q: "Câu 2. Chữ “Phật” có nghĩa là gì? Sự giác ngộ của Đức Phật gồm những phương diện nào?",
+        a: "• <strong>Nghĩa của chữ \"Phật\":</strong> Phật là <strong class='hl'>bậc đã giác ngộ, sáng suốt hoàn toàn</strong>. Chữ Phật không chỉ riêng một đức Phật nào, mà là danh từ chung chỉ cho tất cả những ai đã tu hành đạt đến sự giác ngộ sáng suốt.<br><div class='law-box'><strong>• Ba bậc giác ngộ của Phật:</strong><br>1. <strong class='hl'>Tự giác:</strong> là tự mình giác ngộ do công phu tu tập, thoát khỏi sự si mê tăm tối trong cõi trần.<br>2. <strong class='hl'>Giác tha:</strong> nghĩa là mình đã giác ngộ rồi lại đem những phương pháp tu tập dạy cho chúng sanh khác cũng được giác ngộ như vậy.<br>3. <strong class='hl'>Giác hạnh viên mãn:</strong> là sự giác ngộ hoàn toàn và thành tựu đầy đủ mọi hạnh nguyện, lợi mình và lợi người. (Bồ Tát cũng là bậc đã giác ngộ cho mình và cho người nhưng chưa trọn vẹn, chỉ có Phật mới được gọi là giác hạnh viên mãn).</div>",
+        kw: "Phật = Bậc giác ngộ sáng suốt hoàn toàn • 3 phương diện: Tự giác, Giác tha, Giác hạnh viên mãn"
+    },
+    {
+        id: 3,
+        q: "Câu 3. Tam Bảo gồm những ngôi báu nào?",
+        a: "Tam bảo là <strong class='hl'>3 ngôi quý báu</strong>:<br>1. <strong class='hl'>Phật bảo:</strong> chữ Phạn là <em>Buddha</em> phiên âm ra; chữ Hán là <strong>Giác giả</strong>; là đấng giác ngộ sáng suốt về 3 phương diện: Tự giác, Giác tha, Giác hạnh viên mãn.<br>2. <strong class='hl'>Pháp bảo:</strong> chữ Phạn là <em>Dharma</em>; là phương pháp tu hành mà Phật đã chỉ dạy để diệt trừ mê muội, khổ đau và chứng được quả Phật. Ba tạng kinh gọi chung là Pháp.<br>3. <strong class='hl'>Tăng bảo:</strong> chữ Phạn là <em>Sangha</em>; Hán dịch là <strong>hòa hợp chúng</strong>; là một đoàn thể tu hành sắp từ <strong class='hl'>4 người trở lên</strong>, cùng nhau chung sống một chỗ, đồng giữ giới luật của Phật, đồng chia sớt cho nhau một cách hòa thuận những gì đã thâu nhận được, từ vật chất cho đến tinh thần.",
+        kw: "3 ngôi báu: Phật bảo (Buddha - Giác giả) • Pháp bảo (Dharma - Giáo pháp) • Tăng bảo (Sangha - Hòa hợp chúng từ 4 vị trở lên)"
+    },
+    {
+        id: 4,
+        q: "Câu 4. Tam Bảo được phân chia thành mấy bậc? Kể tên.",
+        a: "Tam bảo có <strong class='hl'>3 bậc</strong>:<br>1. <strong class='hl'>Đồng-thể Tam-bảo</strong><br>2. <strong class='hl'>Xuất-thế-gian Tam-bảo</strong><br>3. <strong class='hl'>Thế-gian trụ-trì Tam-bảo</strong>",
+        kw: "3 bậc Tam Bảo: Đồng-thể Tam-bảo • Xuất-thế-gian Tam-bảo • Thế-gian trụ-trì Tam-bảo"
+    },
+    {
+        id: 5,
+        q: "Câu 5. Đứng về mặt sự tướng, Tam Bảo được hình thành từ khi nào?",
+        a: "• Đứng về mặt sự tướng, Tam bảo được hình thành khi Đức Phật nói bài pháp <strong class='hl'>Tứ Thánh đế</strong> trong lần chuyển pháp luân đầu tiên độ <strong class='hl'>5 anh em ông Kiều-trần-như</strong> xuất gia làm tỳ-kheo tại <strong class='hl'>Lộc Uyển (Ba-la-nại)</strong>.",
+        kw: "Khi Phật thuyết Tứ Thánh đế độ 5 anh em Kiều-trần-như làm Tỳ-kheo tại vườn Lộc Uyển (Ba-la-nại)"
+    },
+    {
+        id: 6,
+        q: "Câu 6. Chữ “Tăng” trong danh từ “Tăng Bảo” có nghĩa là gì?",
+        a: "• Chữ Phạn là <strong class='hl'>Sangha</strong>; Hán dịch là <strong class='hl'>Hòa hợp chúng</strong>; là một đoàn thể tu hành sắp từ <strong class='hl'>4 người trở lên</strong>, cùng nhau chung sống một chỗ, đồng giữ giới luật của Phật, đồng chia sớt cho nhau một cách hòa thuận những gì đã thâu nhận được, từ vật chất cho đến tinh thần.",
+        kw: "Sangha (Hòa hợp chúng) • Đoàn thể tu hành từ 4 người trở lên, đồng giữ giới luật và chia sớt hòa thuận"
+    },
+    {
+        id: 7,
+        q: "Câu 7. Đồng thể Phật Bảo là gì?",
+        a: "• <strong class='hl'>Đồng thể Phật Bảo:</strong> tất cả chúng sanh cùng Chư Phật <strong class='hl'>đồng một thể tánh sáng suốt</strong>.",
+        kw: "Tất cả chúng sanh cùng Chư Phật đồng một thể tánh sáng suốt"
+    },
+    {
+        id: 8,
+        q: "Câu 8. Quy y Tam Bảo có ý nghĩa gì?",
+        a: "• <strong class='hl'>Quy:</strong> là trở về; <strong class='hl'>Y:</strong> là nương tựa; <strong>Quy y</strong> là <strong class='hl'>trở về nương tựa</strong>. Quy y cũng có nghĩa là kính vâng, phục tùng.<br>• <strong>Quy y Tam bảo</strong> là trở về nương tựa 3 ngôi quý báu <strong class='hl'>Phật, Pháp, Tăng</strong> để được hướng dẫn vào con đường chân chánh, làm những điều thiện lành, thoát khỏi khổ đau; đồng thời khỏi đọa lạc vào <strong class='hl'>ba đường ác</strong> là địa ngục, ngạ quỷ và súc sanh.",
+        kw: "Quy (trở về) + Y (nương tựa) • Nương tựa Phật Pháp Tăng để đi đường chân chánh, thoát khổ và khỏi đọa 3 đường ác"
+    },
+    {
+        id: 9,
+        q: "Câu 9. Sám hối là gì?",
+        a: "• Chữ \"Sám\", tiếng Phạn gọi là <strong class='hl'>Samma</strong>; Tàu dịch là <strong class='hl'>\"Hối quá\"</strong>.<br>• <strong class='hl'>Sám</strong> là ăn năn lỗi trước; <strong class='hl'>hối</strong> là chừa bỏ lỗi sau; <strong>sám hối</strong> nghĩa là hối hận những lỗi lầm đã gây ra và nguyện không tái phạm nữa.",
+        kw: "Samma (Hối quá) • Sám: ăn năn lỗi trước; Hối: chừa bỏ lỗi sau, nguyện không tái phạm"
+    },
+    {
+        id: 10,
+        q: "Câu 10. Sám hối chân chính trong đạo Phật có mấy cách? Kể tên.",
+        a: "Có <strong class='hl'>4 cách sám hối</strong>:<br>1. <strong class='hl'>Tác pháp Sám hối:</strong> đối trước chư Tăng thành tâm bày tỏ lỗi lầm của mình và nguyện không tái phạm.<br>2. <strong class='hl'>Thủ tướng Sám hối:</strong> đây là phép sám hối quán tưởng. Đối trước tượng Phật, Bồ tát tự ăn năn lỗi lầm, cho đến khi nào thấy tướng tốt như: thấy Phật, Bồ tát xoa đầu, thấy hoa sen báu...<br>3. <strong class='hl'>Hồng danh Sám hối:</strong> xưng tán và đảnh lễ hồng danh chư Phật, Bồ tát (như lạy Ngũ Bách Danh, Tam thiên Phật, Vạn Phật, hoặc 108 lạy tượng trưng diệt trừ 108 phiền não).<br><div class='law-box'>4. <strong class='hl'>Vô sanh Sám hối:</strong> gồm 2 cách:<br>- <strong>Quán tâm vô sanh:</strong> quán tội lỗi từ tâm sanh, cũng từ tâm diệt. Nếu tâm trống không thì tội lỗi cũng không còn.<br>- <strong>Quán pháp vô sanh:</strong> Quán thật tướng của các pháp vốn không sanh diệt. Khi nhận được thật tướng thì giả tướng không còn, tội lỗi kia cũng tiêu diệt.</div>",
+        kw: "4 cách: Tác pháp Sám hối • Thủ tướng Sám hối • Hồng danh Sám hối • Vô sanh Sám hối (Quán tâm & Quán pháp)"
+    },
+    {
+        id: 11,
+        q: "Câu 11. Tam tạng kinh điển gồm những tạng nào?",
+        a: "Ba tạng kinh điển gồm: <strong class='hl'>KINH – LUẬT – LUẬN</strong> (Sách trang 2 & trang 9):<br>• <strong class='hl'>Tạng Kinh:</strong> Những lời dạy của Đức Phật khi còn tại thế dạy chúng sinh dứt trừ phiền não đạt đến Niết Bàn (ghi lại lời Phật dạy khi còn tại thế).<br>• <strong class='hl'>Tạng Luật:</strong> Những giới luật Đức Phật chế ra để các đệ tử ngăn ngừa hành vi Thân – Khẩu – Ý, dứt bỏ điều ác, tăng trưởng các điều lành, trau dồi thân tâm cho thanh tịnh.<br>• <strong class='hl'>Tạng Luận:</strong> Là những sách trước tác của chư Tổ nhằm minh giải rõ ràng nghĩa lý thâm sâu của Kinh Phật.",
+        kw: "Kinh (lời Phật dạy dứt phiền não) • Luật (giới luật Phật chế giữ Thân Khẩu Ý) • Luận (trước tác của chư Tổ minh giải nghĩa Kinh)"
+    },
+    {
+        id: 12,
+        q: "Câu 12. Mục đích của việc tụng kinh, niệm Phật là gì?",
+        a: "• <strong class='hl'>Tụng kinh:</strong> để đọc đi đọc lại lời Phật nhằm ghi nhớ và thực hành theo; giữ cho <strong class='hl'>sáu căn</strong> (mắt, tai, mũi, lưỡi, thân, ý) không móng lên 10 điều ác mà chỉ ghi nhớ lời hay lẽ phải; giúp gia đình thanh tịnh hòa thuận; thức tỉnh người đời ra khỏi giấc mê.<br>• <strong class='hl'>Niệm Phật:</strong> làm cho những sự mê mờ tăm tối tan biến, phiền não lắng xuống, hiện lên sự sáng suốt chân chánh; trừ được niệm chúng sinh xấu xa (tham, giận, kiêu căng); trừ được tâm buồn phiền trong nghịch cảnh; <strong class='hl'>gieo nhân giải thoát và vãng sanh Cực Lạc</strong>.",
+        kw: "Tụng kinh: ghi nhớ lời Phật, giữ 6 căn thanh tịnh, thức tỉnh người đời • Niệm Phật: lắng phiền não, hiện trí sáng, gieo nhân vãng sanh"
+    },
+    {
+        id: 13,
+        q: "Câu 13. Vì sao người Phật tử cần thực hành ăn chay?",
+        a: "1. <strong class='hl'>Vì lòng từ bi:</strong> thương xót con vật vô tội bị đâm chém đau đớn, biết sợ hãi; và tôn trọng lời Phật dạy: <em>“Tất cả chúng sanh đều có tánh Phật như nhau”</em> (người và vật đều có tri giác bình đẳng).<br>2. <strong class='hl'>Vì muốn tránh quả báo luân hồi:</strong> giết hại sinh mạng thì phải đền trả bằng sinh mạng, sẽ bị chết chóc, thương tật, đau yếu, chiến tranh tàn phá.<br>3. <strong class='hl'>Vì hợp vệ sinh:</strong> thịt động vật có nhiều chất độc hại cho sức khỏe, còn rau cải thực vật thanh khiết, dễ tiêu, tránh được bệnh tật.",
+        kw: "3 lý do: Vì lòng từ bi (chúng sanh đều có tánh Phật) • Tránh quả báo luân hồi sát nghiệp • Hợp vệ sinh, tốt cho sức khỏe"
+    },
+    {
+        id: 14,
+        q: "Câu 14. Thờ Phật, lạy Phật và cúng Phật có ý nghĩa gì?",
+        a: "• <strong class='hl'>Ý nghĩa thờ Phật:</strong> Để tỏ lòng biết ơn, tri ân Vị có ân đức lớn với nhân loại; có tấm gương mẫu sáng suốt trọn lành để khuôn rập tư tưởng, lời nói và hành động; luôn có bên mình ngọn đèn trí tuệ và hương từ bi của Ngài để nhắc nhở làm điều thiện, không làm việc sai trái.<br>• <strong class='hl'>Ý nghĩa lạy Phật:</strong> Ngày xưa đệ tử cúi xuống hôn chân Phật và đặt trán lên đó; ngày nay tuy Phật nhập diệt, ta vẫn xem như Phật còn tại thế nên cúi lạy tỏ lòng tôn kính tuyệt đối.<br>• <strong class='hl'>Ý nghĩa cúng Phật:</strong> Xem như Phật vẫn còn bên cạnh dạy dỗ tu tập; dâng mời món ăn thanh tịnh để tỏ tấm lòng thành kính; cao cả nhất là <strong class='hl'>giữ giới thanh tịnh</strong>, tập tâm hồn đừng xao động mê nhiễm và học hỏi giáo pháp.",
+        kw: "Thờ Phật: tri ân, soi gương trí tuệ từ bi • Lạy Phật: tôn kính tuyệt đối • Cúng Phật: thành kính, giữ giới thanh tịnh & học pháp"
+    },
+    {
+        id: 15,
+        q: "Câu 15. Vô thường là gì? Có những phương diện nào?",
+        a: "• <strong>Định nghĩa:</strong> Vô là không; thường là thường còn, vĩnh viễn; <strong class='hl'>vô thường</strong> là sự không thường còn, luôn biến chuyển, thay đổi liên tục của tất cả những sự vật, hiện tượng trong vũ trụ, không vĩnh viễn ở yên trong một trạng thái nào cả.<br>• <strong>Ba phương diện vô thường:</strong> Có 3 loại là <strong class='hl'>thân vô thường, tâm vô thường và hoàn cảnh vô thường</strong>.",
+        kw: "Vô thường = Không thường còn, biến chuyển liên tục • 3 phương diện: Thân vô thường, Tâm vô thường, Hoàn cảnh vô thường"
+    },
+    {
+        id: 16,
+        q: "Câu 16. Vì sao Đức Phật dạy giáo lý vô thường?",
+        a: "Để con người thấy rõ bản chất thay đổi của vạn vật:<br>• Giúp con người <strong class='hl'>bình tĩnh trước cảnh đời thay đổi</strong>, tình cảm chia ly; dám hy sinh tài sản, sinh mạng để làm việc nghĩa; sáng suốt đi tìm con đường giải thoát giác ngộ.<br>• <strong class='hl'>Tỉnh ngộ không đeo đuổi, bám víu</strong> vào những cái hào nhoáng, giả tạm nhất thời của thế gian (danh vọng, tiền tài, quyền thế...).",
+        kw: "Bình tĩnh trước biến đổi, dám hy sinh làm việc nghĩa • Tỉnh ngộ không bám víu danh lợi giả tạm, tìm đường giải thoát"
+    },
+    {
+        id: 17,
+        q: "Câu 17. Thiểu dục và tri túc là gì?",
+        a: "• <strong class='hl'>Thiểu</strong> là ít; <strong class='hl'>dục</strong> là ham muốn; <strong class='hl'>tri</strong> là biết; <strong class='hl'>túc</strong> là đủ; <strong>thiểu dục tri túc</strong> là <strong class='hl'>ít ham muốn và biết đủ</strong>.<br>• Trong cuộc sống hằng ngày, ít mong muốn danh lợi, tình cảm và biết hạn chế những nhu cầu, quyền lợi cá nhân; hoàn cảnh nào cũng sống được, có bao nhiêu xài bấy nhiêu, tiết kiệm, giản dị, không đua đòi cho thêm khổ sở.",
+        kw: "Thiểu dục (ít ham muốn) + Tri túc (biết đủ) • Sống giản dị, tiết kiệm, hạn chế nhu cầu cá nhân, không đua đòi"
+    },
+    {
+        id: 18,
+        q: "Câu 18. Thực hành thiểu dục tri túc đem lại lợi ích gì?",
+        a: "1. <strong class='hl'>Đối với bản thân:</strong> cảm thấy an lạc, không lo lắng, thất vọng, không phạm giới, tổn phước.<br>2. <strong class='hl'>Đối với người xung quanh:</strong> không xâm phạm quyền lợi người khác, xây dựng được tình thân ái, cuộc sống hòa bình.<br>3. <strong class='hl'>Đối với môi trường tự nhiên:</strong> không tàn phá, không làm cạn kiệt tài nguyên thiên nhiên, giữ gìn được hệ sinh thái cân bằng.",
+        kw: "Bản thân: an lạc, không phạm giới • Người xung quanh: hòa bình, thân ái • Môi trường: không cạn kiệt tài nguyên, giữ cân bằng sinh thái"
+    },
+    {
+        id: 19,
+        q: "Câu 19. Nhân quả là gì?",
+        a: "• <strong class='hl'>Nhân</strong> là nguyên nhân; <strong class='hl'>quả</strong> là kết quả; <strong>nhân quả</strong> là <strong class='hl'>mối quan hệ nguyên nhân đưa đến kết quả tương ứng</strong>.",
+        kw: "Nhân (nguyên nhân) + Quả (kết quả) • Mối quan hệ nguyên nhân đưa đến kết quả tương ứng"
+    },
+    {
+        id: 20,
+        q: "Câu 20. Luật nhân quả có những đặc tính nào?",
+        a: "1. <strong class='hl'>Nhân nào quả nấy:</strong> Thông thường thì nhân nào sẽ sinh ra quả nấy (như hạt cam sinh quả cam).<br>2. <strong class='hl'>Một nhân không thể sanh ra quả:</strong> phải có sự tổ hợp và trợ duyên của nhiều nhân khác.<br>3. <strong class='hl'>Trong nhân có quả, trong quả có nhân:</strong> nhân hiện tại chứa quả vị lai, quả hiện tại chứa nhân quá khứ.<br>4. <strong class='hl'>Sự phát triển nhanh và chậm từ nhân đến quả:</strong> có khi xảy ra liền kề, có khi đợi một thời gian, vài chục năm hoặc vài trăm năm/nhiều kiếp mới xuất hiện.",
+        kw: "4 đặc tính: Nhân nào quả nấy • Một nhân không thể sanh quả (cần trợ duyên) • Trong nhân có quả, trong quả có nhân • Thời gian trổ quả nhanh/chậm"
+    },
+    {
+        id: 21,
+        q: "Câu 21. Hiểu và thực hành đúng luật nhân quả có lợi ích gì?",
+        a: "• <strong class='hl'>Không mê tín dị đoan</strong>, tin tưởng sai lầm vào thần quyền.<br>• Có <strong class='hl'>lòng tin vào chính bản thân</strong>, phát khởi hành động tốt.<br>• Không than trách, oán hận khi gặp thất bại hoặc gặp nghịch cảnh; hiểu rằng <strong class='hl'>cuộc đời do chính mình làm chủ</strong>, nỗ lực không ngừng làm các điều thiện lành để chuyển nghiệp, vươn tới hạnh phúc.",
+        kw: "Không mê tín thần quyền • Tự tin vào bản thân • Không oán trách nghịch cảnh, tự làm chủ cuộc đời & làm thiện chuyển nghiệp"
+    },
+    {
+        id: 22,
+        q: "Câu 22. Luân hồi là gì?",
+        a: "• <strong class='hl'>Luân</strong> là bánh xe; <strong class='hl'>hồi</strong> là xoay tròn; <strong>luân hồi</strong> là sự xoay chuyển, lên xuống của mỗi chúng sanh trong <strong class='hl'>6 cõi</strong>, khi đầu thai cõi này, khi đầu thai cõi khác, tiếp nối tử sanh, sanh tử không ngừng.",
+        kw: "Luân (bánh xe) + Hồi (xoay tròn) • Sự xoay chuyển đầu thai lên xuống trong 6 cõi, sanh tử không ngừng"
+    },
+    {
+        id: 23,
+        q: "Câu 23. Lục đạo luân hồi gồm những cảnh giới nào?",
+        a: "Gồm <strong class='hl'>6 cõi</strong>:<br>1. <strong class='hl'>Địa ngục</strong><br>2. <strong class='hl'>Ngạ quỷ</strong><br>3. <strong class='hl'>Súc sanh</strong><br>4. <strong class='hl'>A Tu La</strong><br>5. <strong class='hl'>Loài người</strong><br>6. <strong class='hl'>Cõi trời</strong>",
+        kw: "6 cõi: Địa ngục, Ngạ quỷ, Súc sanh (3 đường ác) • A Tu La, Loài người, Cõi trời (3 đường lành)"
+    },
+    {
+        id: 24,
+        q: "Câu 24. Ba nghiệp tham, sân, si tương ứng với những cảnh giới đọa lạc nào?",
+        a: "• <strong class='hl'>Tâm Tham</strong> (tham lam, bỏn xẻn, mưu sâu cướp đoạt): đọa vào cõi <strong class='hl'>Ngạ quỷ</strong>.<br>• <strong class='hl'>Tâm Sân</strong> (sân hận, độc ác làm nhiều tội lỗi): đọa vào cõi <strong class='hl'>Địa ngục</strong>.<br>• <strong class='hl'>Tâm Si</strong> (si mê sa đọa theo thất tình lục dục, không phân biệt tốt xấu): đọa vào cõi <strong class='hl'>Súc sanh</strong>.",
+        kw: "Tham -> Ngạ quỷ • Sân -> Địa ngục • Si -> Súc sanh"
+    },
+    {
+        id: 25,
+        q: "Câu 25. Thập thiện nghiệp gồm những nghiệp thiện nào?",
+        a: "• <strong class='hl'>Thân (3 nghiệp lành):</strong> 1. Không sát sanh; 2. Không trộm cắp; 3. Không tà dâm.<br>• <strong class='hl'>Khẩu (4 nghiệp lành):</strong> 4. Không nói dối; 5. Không nói lưỡi đôi chiều; 6. Không nói thêu dệt; 7. Không nói lời hung ác, tục tĩu.<br>• <strong class='hl'>Ý (3 nghiệp lành):</strong> 8. Không tham lam; 9. Không sân hận; 10. Không si mê.",
+        kw: "Thân (3): Không sát sanh, trộm cắp, tà dâm • Khẩu (4): Không nói dối, hai chiều, thêu dệt, ác khẩu • Ý (3): Không tham, sân, si"
+    },
+    {
+        id: 26,
+        q: "Câu 26. Tu tập Thập thiện nghiệp đem lại lợi ích gì?",
+        a: "• <strong class='hl'>Đời hiện tại:</strong> Thân tâm an lạc, khỏe mạnh, sống lâu, được mọi người kính mến, tin cậy; trừ sạch thói quen giận hờn, ba nghiệp thanh tịnh, trí tuệ sáng suốt, phước huệ tăng trưởng.<br>• <strong class='hl'>Đời sau:</strong> Khỏi bị đọa vào ba đường ác (địa ngục, ngạ quỷ, súc sanh), được sanh lên <strong class='hl'>cõi Trời hoặc tái sinh làm người</strong> hưởng phước báo cao quý.<br>• Là <strong class='hl'>nhân chánh</strong> để tu hành giải thoát, chứng thành Phật quả.",
+        kw: "Hiện tại: thân tâm an lạc, phước huệ tăng trưởng • Đời sau: thoát 3 đường ác, sanh cõi Người/Trời • Nhân chánh thành Phật"
+    },
+    {
+        id: 27,
+        q: "Câu 27. Tứ nhiếp pháp gồm những pháp nào?",
+        a: "Là <strong class='hl'>4 phương pháp lợi tha</strong> để thu phục chúng sanh quay về với Phật pháp, gồm:<br>1. <strong class='hl'>Bố thí nhiếp</strong><br>2. <strong class='hl'>Ái ngữ nhiếp</strong><br>3. <strong class='hl'>Lợi hành nhiếp</strong><br>4. <strong class='hl'>Đồng sự nhiếp</strong>",
+        kw: "4 pháp thu phục chúng sanh: Bố thí nhiếp • Ái ngữ nhiếp • Lợi hành nhiếp • Đồng sự nhiếp"
+    },
+    {
+        id: 28,
+        q: "Câu 28. Bố thí có mấy loại? Kể tên.",
+        a: "Bố thí có <strong class='hl'>3 phần</strong>:<br>1. <strong class='hl'>Tài thí:</strong> đem tiền của, vật chất bố thí cứu giúp người nghèo khó, hoạn nạn (gồm <strong>Ngoại tài</strong> là tiền của vật chất; <strong>Nội tài</strong> là thân thể, công sức của mình).<br>2. <strong class='hl'>Pháp thí:</strong> đem giáo pháp quý báu của Đức Phật giảng dạy cho chúng sanh; hoặc dạy nghề nghiệp, phương pháp làm ăn giúp họ ổn định đời sống.<br>3. <strong class='hl'>Vô úy thí:</strong> mang đến sự không sợ hãi cho chúng sanh, che chở, bảo vệ giúp họ được bình tĩnh, yên ổn.",
+        kw: "3 loại bố thí: Tài thí (Ngoại tài & Nội tài) • Pháp thí (giảng đạo, dạy nghề) • Vô úy thí (đem lại sự không sợ hãi)"
+    },
+    {
+        id: 29,
+        q: "Câu 29. Lục hòa gồm những pháp nào?",
+        a: "Gồm <strong class='hl'>6 pháp cư xử hòa hợp</strong>:<br>1. Thân hòa cùng ở (<strong class='hl'>Thân hòa đồng trú</strong>)<br>2. Lời nói cùng hòa hợp (<strong class='hl'>Khẩu hòa vô tranh</strong>)<br>3. Ý hòa cùng vui (<strong class='hl'>Ý hòa đồng duyệt</strong>)<br>4. Giới hòa cùng tu (<strong class='hl'>Giới hòa đồng tu</strong>)<br>5. Hiểu biết cùng giải bày (<strong class='hl'>Kiến hòa đồng giải</strong>)<br>6. Lợi ích cùng chia sẻ (<strong class='hl'>Lợi hòa đồng quân</strong>)",
+        kw: "6 pháp hòa kỉnh: Thân hòa đồng trú • Khẩu hòa vô tranh • Ý hòa đồng duyệt • Giới hòa đồng tu • Kiến hòa đồng giải • Lợi hòa đồng quân"
+    },
+    {
+        id: 30,
+        q: "Câu 30. Người tu pháp môn Tịnh độ cần đầy đủ những điều kiện căn bản nào?",
+        a: "Phải có đủ <strong class='hl'>3 điều kiện (Tín, Nguyện và Hành)</strong>:<br>1. <strong class='hl'>Tín (lòng tin chắc chắn):</strong> Tin có Đức Phật A-di-đà và cõi Tịnh độ Cực Lạc; tin giáo pháp Phật dạy trong kinh A-di-đà là đúng đắn; tin bản thân mình là \"Phật sẽ thành\", nhất tâm niệm Phật chắc chắn được vãng sanh.<br>2. <strong class='hl'>Nguyện:</strong> lập chí nguyện vững vàng quyết về Tịnh độ, dù gặp trở ngại cũng không thối chuyển.<br>3. <strong class='hl'>Hành:</strong> luôn luôn thực hành trì niệm danh hiệu Đức Phật A-di-đà trong khi đi, đứng, nằm, ngồi, không phút giây nào xao lãng.",
+        kw: "3 tư lương Tịnh độ: Tín (tin Phật A-di-đà, Cực Lạc & tự tâm) • Nguyện (chí nguyện vãng sanh) • Hành (trì niệm danh hiệu Phật)"
+    }
+];
+
+// Ngân hàng 30 câu hỏi Trắc nghiệm trong Game (Bao phủ toàn bộ 30 câu hỏi Giáo lý)
+const QUIZ_BANK = [
+    {
+        id: 1,
+        q: "Câu 1: Chữ 'Đạo' có 3 nghĩa là Con đường, Bổn phận và Chân lý tuyệt đối. Vậy trong danh từ 'Đạo Phật', chữ 'Đạo' mang nghĩa thiết thực nào?",
+        options: [
+            "Con đường đưa chúng sanh từ mê lầm tới giác ngộ, từ đau khổ tới an vui và là phương pháp sống hạnh phúc ngay trong hiện tại",
+            "Con đường cầu thần linh ban phước để sau khi mất được lên cõi Trời hưởng lạc",
+            "Những quy tắc lễ nghi bắt buộc chỉ dành riêng cho người xuất gia trong chùa",
+            "Học thuyết triết học thuần túy bàn về sự hình thành của vũ trụ"
+        ],
+        correct: 0,
+        explain: "Đạo trong 'Đạo Phật' là con đường đưa chúng sanh từ mê lầm tới giác ngộ, từ đau khổ tới an vui; là phương pháp sống có ý nghĩa và hạnh phúc ngay trong hiện tại."
+    },
+    {
+        id: 2,
+        q: "Câu 2: Sự giác ngộ của Đức Phật gồm đầy đủ ba phương diện nào?",
+        options: [
+            "Tự giác, Giác tha và Giác hạnh viên mãn",
+            "Túc mạng minh, Thiên nhãn minh và Lậu tận minh",
+            "Giới định, Tuệ định và Giải thoát định",
+            "Đồng thể, Xuất thế gian và Thế gian trụ trì"
+        ],
+        correct: 0,
+        explain: "Sự giác ngộ của Phật gồm 3 phương diện: Tự giác (tự mình giác ngộ), Giác tha (dạy chúng sanh khác cùng giác ngộ) và Giác hạnh viên mãn (hoàn toàn viên mãn cả hai hạnh trên)."
+    },
+    {
+        id: 3,
+        q: "Câu 3: Tam Bảo gồm ba ngôi quý báu nào và tên tiếng Phạn tương ứng là gì?",
+        options: [
+            "Phật bảo (Buddha), Pháp bảo (Dharma) và Tăng bảo (Sangha)",
+            "Kinh bảo (Sutta), Luật bảo (Vinaya) và Luận bảo (Abhidamma)",
+            "Tín bảo, Nguyện bảo và Hạnh bảo",
+            "Giới bảo, Định bảo và Tuệ bảo"
+        ],
+        correct: 0,
+        explain: "Tam Bảo là 3 ngôi quý báu: Phật bảo (Buddha - Giác giả), Pháp bảo (Dharma - phương pháp tu hành) và Tăng bảo (Sangha - Hòa hợp chúng)."
+    },
+    {
+        id: 4,
+        q: "Câu 4: Tam Bảo được phân chia thành 3 bậc nào?",
+        options: [
+            "Đồng-thể Tam-bảo, Xuất-thế-gian Tam-bảo và Thế-gian trụ-trì Tam-bảo",
+            "Thượng-thừa Tam-bảo, Trung-thừa Tam-bảo và Hạ-thừa Tam-bảo",
+            "Quá-khứ Tam-bảo, Hiện-tại Tam-bảo và Vị-lai Tam-bảo",
+            "Tự-tánh Tam-bảo, Hóa-tướng Tam-bảo và Ứng-thân Tam-bảo"
+        ],
+        correct: 0,
+        explain: "Tam Bảo có 3 bậc là: 1. Đồng-thể Tam-bảo; 2. Xuất-thế-gian Tam-bảo; 3. Thế-gian trụ-trì Tam-bảo."
+    },
+    {
+        id: 5,
+        q: "Câu 5: Đứng về mặt sự tướng, Tam Bảo được hình thành từ sự kiện lịch sử nào?",
+        options: [
+            "Khi Đức Phật thuyết bài pháp Tứ Thánh đế độ 5 anh em Kiều-trần-như xuất gia làm Tỳ-kheo tại vườn Lộc Uyển",
+            "Khi Thái tử Tất-đạt-đa vừa đản sanh tại vườn Lâm-tỳ-ni",
+            "Khi Thái tử cắt tóc xuất gia bên bờ sông A-nô-ma",
+            "Khi cuộc kiết tập kinh điển lần thứ nhất diễn ra tại hang Thất Diệp"
+        ],
+        correct: 0,
+        explain: "Khi Đức Phật (Phật bảo) thuyết pháp Tứ Thánh đế (Pháp bảo) độ 5 anh em Kiều-trần-như xuất gia làm Tỳ-kheo (Tăng bảo) tại vườn Lộc Uyển, Tam Bảo về mặt sự tướng chính thức viên mãn."
+    },
+    {
+        id: 6,
+        q: "Câu 6: Chữ 'Tăng' (Sangha) trong danh từ 'Tăng Bảo' có nghĩa là gì?",
+        options: [
+            "Hòa hợp chúng: đoàn thể tu hành từ 4 người trở lên, sống chung hòa hợp, đồng giữ giới luật và chia sớt từ vật chất đến tinh thần",
+            "Một vị tu sĩ độc cư tu khổ hạnh một mình trên rừng núi",
+            "Bất kỳ nhóm người nào tụ họp lại để bàn chuyện thế sự",
+            "Những người cư sĩ tại gia chỉ đến chùa vào ngày rằm và mùng một"
+        ],
+        correct: 0,
+        explain: "Tăng (Sangha) dịch là Hòa hợp chúng: đoàn thể tu hành từ 4 vị trở lên, cùng chung sống, đồng giữ giới luật Phật và chia sớt hòa thuận cả vật chất lẫn tinh thần."
+    },
+    {
+        id: 7,
+        q: "Câu 7: 'Đồng thể Phật Bảo' được định nghĩa như thế nào?",
+        options: [
+            "Tất cả chúng sanh cùng Chư Phật đồng một thể tánh sáng suốt",
+            "Các pho tượng Phật được đúc bằng cùng một chất liệu đồng",
+            "Chư Phật trong mười phương có hình dáng sắc thân giống hệt nhau",
+            "Chỉ những bậc A-la-hán mới có Phật tánh"
+        ],
+        correct: 0,
+        explain: "Đồng thể Phật Bảo nghĩa là tất cả chúng sanh cùng Chư Phật đều đồng một thể tánh sáng suốt (Phật tánh)."
+    },
+    {
+        id: 8,
+        q: "Câu 8: Quy y Tam Bảo có ý nghĩa là gì?",
+        options: [
+            "Trở về nương tựa 3 ngôi báu Phật, Pháp, Tăng để đi con đường chân chánh, làm lành lánh dữ, thoát khổ và khỏi đọa 3 đường ác",
+            "Xin Đức Phật ban cho quyền năng phép thuật để không bị bệnh tật",
+            "Từ bỏ gia đình để vào rừng sống ẩn dật suốt đời",
+            "Chỉ là một nghi lễ ghi tên vào sổ chùa mà không cần thực hành giới luật"
+        ],
+        correct: 0,
+        explain: "Quy là trở về, Y là nương tựa. Quy y Tam Bảo là trở về nương tựa Phật, Pháp, Tăng để hướng về đường chánh, làm điều thiện lành, thoát khổ đau và khỏi đọa ba đường ác."
+    },
+    {
+        id: 9,
+        q: "Câu 9: Chữ 'Sám hối' (tiếng Phạn là Samma, dịch là Hối quá) có nghĩa chính xác là gì?",
+        options: [
+            "Sám là ăn năn lỗi trước; Hối là chừa bỏ lỗi sau, nguyện không tái phạm nữa",
+            "Phạm lỗi rồi chỉ cần cúng dường thật nhiều tiền của để chuộc tội",
+            "Xin thần linh xóa bỏ mọi tội lỗi để tiếp tục làm việc cũ",
+            "Tự hành hạ thân xác cho đau đớn để đền tội"
+        ],
+        correct: 0,
+        explain: "Sám là ăn năn lỗi trước, Hối là chừa bỏ lỗi sau; Sám hối là hối hận những lỗi lầm đã gây ra và nguyện không tái phạm nữa."
+    },
+    {
+        id: 10,
+        q: "Câu 10: Trong đạo Phật có 4 cách sám hối chân chính là những cách nào?",
+        options: [
+            "Tác pháp Sám hối, Thủ tướng Sám hối, Hồng danh Sám hối và Vô sanh Sám hối",
+            "Thân Sám hối, Khẩu Sám hối, Ý Sám hối và Tài Sám hối",
+            "Ngoại Sám hối, Nội Sám hối, Bí mật Sám hối và Hiển lộ Sám hối",
+            "Tiểu thừa Sám hối, Đại thừa Sám hối, Nhơn thừa Sám hối và Thiên thừa Sám hối"
+        ],
+        correct: 0,
+        explain: "4 cách sám hối chân chính gồm: 1. Tác pháp Sám hối; 2. Thủ tướng Sám hối; 3. Hồng danh Sám hối; 4. Vô sanh Sám hối (Quán tâm vô sanh & Quán pháp vô sanh)."
+    },
+    {
+        id: 11,
+        q: "Câu 11: Tam tạng kinh điển gồm những tạng nào và nội dung chính của từng tạng là gì?",
+        options: [
+            "Tạng Kinh (lời Phật dạy dứt phiền não), Tạng Luật (giới luật Phật chế giữ Thân Khẩu Ý), Tạng Luận (sách của chư Tổ giải thích nghĩa Kinh)",
+            "Tạng Bi, Tạng Trí và Tạng Dũng",
+            "Tạng Thiên, Tạng Địa và Tạng Nhân",
+            "Tạng Quá khứ, Tạng Hiện tại và Tạng Vị lai"
+        ],
+        correct: 0,
+        explain: "Tam tạng gồm: Kinh (lời Phật dạy dứt trừ phiền não đạt Niết-bàn), Luật (giới luật ngăn ngừa hành vi Thân Khẩu Ý), Luận (trước tác của chư Tổ minh giải nghĩa lý Kinh)."
+    },
+    {
+        id: 12,
+        q: "Câu 12: Mục đích cốt lõi của việc tụng kinh và niệm Phật là gì?",
+        options: [
+            "Tụng kinh để nhớ và thực hành lời Phật, giữ 6 căn thanh tịnh; Niệm Phật để lắng phiền não, hiện sự sáng suốt và gieo nhân giải thoát, vãng sanh",
+            "Tụng kinh để cầu Phật làm thay mọi công việc; Niệm Phật để thi đua xem ai đọc to tiếng hơn",
+            "Chỉ để cầu danh lợi, buôn may bán đắt mà không cần sửa đổi tâm tánh",
+            "Để chứng tỏ mình thuộc nhiều chữ nghĩa hơn người khác"
+        ],
+        correct: 0,
+        explain: "Tụng kinh giúp ghi nhớ và thực hành lời Phật, giữ 6 căn không phạm 10 điều ác; Niệm Phật giúp lắng dịu phiền não, hiện trí sáng suốt và gieo nhân giải thoát, vãng sanh Cực Lạc."
+    },
+    {
+        id: 13,
+        q: "Câu 13: Vì sao người Phật tử cần thực hành ăn chay?",
+        options: [
+            "Vì lòng từ bi (chúng sanh đều có tánh Phật), vì muốn tránh quả báo luân hồi sát nghiệp và vì hợp vệ sinh, tốt cho sức khỏe",
+            "Vì muốn ép xác khổ hạnh giống như các đạo sĩ ngoại đạo",
+            "Vì rau củ đắt tiền hơn thịt cá",
+            "Vì bắt buộc phải ăn chay mới được bước chân vào chùa"
+        ],
+        correct: 0,
+        explain: "3 lý do ăn chay: 1. Vì lòng từ bi thương vật; 2. Vì tránh quả báo luân hồi đền mạng; 3. Vì hợp vệ sinh, thanh khiết, tránh bệnh tật."
+    },
+    {
+        id: 14,
+        q: "Câu 14: Trong ý nghĩa của việc Thờ Phật, Lạy Phật và Cúng Phật, cách cúng dường nào được xem là cao cả nhất?",
+        options: [
+            "Giữ giới thanh tịnh, tập tâm hồn đừng xao động mê nhiễm và học hỏi thực hành giáo pháp",
+            "Dâng cúng thật nhiều mâm cao cỗ đầy, vàng mã đắt tiền",
+            "Xây dựng tượng Phật thật lớn nhưng không tu sửa thân tâm",
+            "Đốt thật nhiều nhang đèn suốt ngày đêm"
+        ],
+        correct: 0,
+        explain: "Bên cạnh dâng phẩm vật thanh tịnh tỏ lòng thành kính, sự cúng Phật cao cả nhất là giữ giới thanh tịnh, giữ tâm không xao động mê nhiễm và học hỏi giáo pháp."
+    },
+    {
+        id: 15,
+        q: "Câu 15: Giáo lý Vô thường chỉ cho sự biến chuyển không ngừng của vạn vật trên mấy phương diện chính?",
+        options: [
+            "3 phương diện: Thân vô thường, Tâm vô thường và Hoàn cảnh vô thường",
+            "2 phương diện: Ngày vô thường và Đêm vô thường",
+            "4 phương diện: Đông, Tây, Nam, Bắc vô thường",
+            "Chỉ có 1 phương diện duy nhất là Thân xác con người vô thường"
+        ],
+        correct: 0,
+        explain: "Vô thường là sự không thường còn, luôn biến chuyển liên tục, gồm 3 phương diện: Thân vô thường, Tâm vô thường và Hoàn cảnh vô thường."
+    },
+    {
+        id: 16,
+        q: "Câu 16: Đức Phật dạy giáo lý Vô thường nhằm mục đích gì?",
+        options: [
+            "Giúp con người bình tĩnh trước cảnh đời thay đổi, không bám víu vào danh lợi giả tạm, dám làm việc nghĩa và tìm đường giải thoát",
+            "Làm cho con người bi quan, chán nản, buông xuôi không muốn làm việc gì",
+            "Khuyên con người hãy hưởng thụ tối đa vì cuộc đời ngắn ngủi",
+            "Để con người sợ hãi trước cái chết"
+        ],
+        correct: 0,
+        explain: "Hiểu vô thường giúp ta bình tĩnh trước biến cố, tỉnh ngộ không bám víu vào những thứ giả tạm (danh vọng, tiền tài) và nỗ lực làm việc nghĩa, tu tập giải thoát."
+    },
+    {
+        id: 17,
+        q: "Câu 17: 'Thiểu dục và tri túc' có nghĩa là gì?",
+        options: [
+            "Thiểu dục là ít ham muốn; Tri túc là biết đủ (sống giản dị, tiết kiệm, hạn chế nhu cầu cá nhân, không đua đòi)",
+            "Không làm bất cứ công việc gì và chịu cảnh đói khát",
+            "Tích trữ thật nhiều của cải nhưng không bao giờ giúp đỡ ai",
+            "Ham muốn thật nhiều nhưng giả vờ không cần"
+        ],
+        correct: 0,
+        explain: "Thiểu là ít, dục là ham muốn; tri là biết, túc là đủ. Thiểu dục tri túc là ít ham muốn và biết đủ, sống giản dị, tiết kiệm, không đua đòi."
+    },
+    {
+        id: 18,
+        q: "Câu 18: Thực hành 'Thiểu dục tri túc' đem lại lợi ích trên những phương diện nào?",
+        options: [
+            "Bản thân (an lạc, không phạm giới), Người xung quanh (hòa bình, không xâm phạm nhau) và Môi trường tự nhiên (không cạn kiệt tài nguyên, giữ cân bằng sinh thái)",
+            "Chỉ có lợi cho bản thân chứ không liên quan đến xã hội và thiên nhiên",
+            "Giúp nhanh chóng trở thành tỷ phú giàu có nhất thế gian",
+            "Chỉ có lợi cho người xuất gia chứ cư sĩ tại gia không áp dụng được"
+        ],
+        correct: 0,
+        explain: "Thiểu dục tri túc đem lại 3 lợi ích lớn: cho bản thân (an lạc, không tổn phước), cho người xung quanh (thân ái, hòa bình) và cho môi trường tự nhiên (bảo vệ tài nguyên và hệ sinh thái)."
+    },
+    {
+        id: 19,
+        q: "Câu 19: Khái niệm 'Nhân quả' trong Phật giáo được hiểu như thế nào?",
+        options: [
+            "Nhân là nguyên nhân, quả là kết quả; nhân quả là mối quan hệ nguyên nhân đưa đến kết quả tương ứng",
+            "Mọi sự việc trên đời đều do ngẫu nhiên may rủi mà có",
+            "Mọi sướng khổ của con người đều do một đấng thần linh định đoạt sẵn",
+            "Làm điều ác nhưng chỉ cần cầu xin là sẽ nhận được quả lành"
+        ],
+        correct: 0,
+        explain: "Nhân là nguyên nhân, quả là kết quả; nhân quả là quy luật nguyên nhân đưa đến kết quả tương ứng."
+    },
+    {
+        id: 20,
+        q: "Câu 20: Đâu là 4 đặc tính cốt lõi của Luật Nhân quả?",
+        options: [
+            "1. Nhân nào quả nấy; 2. Một nhân không thể sanh quả (cần trợ duyên); 3. Trong nhân có quả, trong quả có nhân; 4. Sự phát triển nhanh và chậm từ nhân đến quả",
+            "1. Nhân nhỏ quả lớn; 2. Không cần duyên cũng thành quả; 3. Nhân quả bất biến cố định; 4. Chỉ trổ quả ở kiếp hiện tại",
+            "1. Nhân thiện sinh quả ác; 2. Một nhân tự sinh quả; 3. Nhân quả tách rời nhau; 4. Chỉ trổ quả sau khi chết",
+            "1. Do trời định; 2. Do số mệnh; 3. Do phong thủy; 4. Do bói toán"
+        ],
+        correct: 0,
+        explain: "4 đặc tính của nhân quả: 1. Nhân nào quả nấy; 2. Một nhân không thể sanh quả (cần nhiều nhân duyên); 3. Trong nhân có quả, trong quả có nhân; 4. Thời gian từ nhân đến quả có nhanh và chậm."
+    },
+    {
+        id: 21,
+        q: "Câu 21: Hiểu và thực hành đúng luật Nhân quả mang lại lợi ích thiết thực gì?",
+        options: [
+            "Không mê tín dị đoan vào thần quyền, tự tin vào bản thân, không oán trách khi gặp nghịch cảnh và nỗ lực làm thiện để chuyển nghiệp",
+            "Biết trước được tương lai để mua vé số trúng thưởng",
+            "Đổ lỗi mọi thất bại hiện tại cho kiếp trước rồi buông xuôi không cố gắng",
+            "Sợ hãi không dám làm bất cứ việc gì trong đời sống"
+        ],
+        correct: 0,
+        explain: "Hiểu đúng nhân quả giúp ta không mê tín thần quyền, tự tin làm chủ cuộc đời, không than trách oán hận trước nghịch cảnh và tích cực làm lành để chuyển nghiệp."
+    },
+    {
+        id: 22,
+        q: "Câu 22: 'Luân hồi' có nghĩa là gì?",
+        options: [
+            "Luân là bánh xe, hồi là xoay tròn; chỉ sự xoay chuyển lên xuống của chúng sanh trong 6 cõi, tiếp nối sanh tử không ngừng",
+            "Con người chết là hết, không còn bất cứ sự tiếp nối nào",
+            "Làm người thì vĩnh viễn đầu thai làm người, làm thú thì vĩnh viễn làm thú",
+            "Sự di chuyển của các hành tinh trong hệ mặt trời"
+        ],
+        correct: 0,
+        explain: "Luân là bánh xe, hồi là xoay tròn. Luân hồi là sự xoay chuyển, lên xuống của chúng sanh trong 6 cõi theo nghiệp lực, sanh tử tiếp nối không ngừng."
+    },
+    {
+        id: 23,
+        q: "Câu 23: Lục đạo luân hồi bao gồm 6 cảnh giới nào?",
+        options: [
+            "Địa ngục, Ngạ quỷ, Súc sanh, A Tu La, Loài người và Cõi trời",
+            "Địa ngục, Ngạ quỷ, Súc sanh, Thanh văn, Duyên giác và Bồ tát",
+            "Cõi người, Cõi trời, Cõi tiên, Cõi thần, Cõi ma và Cõi Phật",
+            "Đông thắng thần châu, Nam thiệm bộ châu, Tây ngưu hóa châu và Bắc câu lư châu"
+        ],
+        correct: 0,
+        explain: "Lục đạo luân hồi gồm 6 cõi: 1. Địa ngục; 2. Ngạ quỷ; 3. Súc sanh; 4. A Tu La; 5. Loài người; 6. Cõi trời."
+    },
+    {
+        id: 24,
+        q: "Câu 24: Ba nghiệp ác Tham, Sân, Si tương ứng dẫn chúng sanh đọa lạc vào những cảnh giới nào?",
+        options: [
+            "Tâm Tham đọa Ngạ quỷ; Tâm Sân đọa Địa ngục; Tâm Si đọa Súc sanh",
+            "Tâm Tham đọa Địa ngục; Tâm Sân đọa Súc sanh; Tâm Si đọa Ngạ quỷ",
+            "Tâm Tham đọa Súc sanh; Tâm Sân đọa Ngạ quỷ; Tâm Si đọa Địa ngục",
+            "Cả ba tâm Tham, Sân, Si đều sanh lên cõi A Tu La"
+        ],
+        correct: 0,
+        explain: "Tâm Tham (tham lam, bỏn xẻn) đọa cõi Ngạ quỷ; Tâm Sân (sân hận, độc ác) đọa cõi Địa ngục; Tâm Si (si mê không phân biệt tốt xấu) đọa cõi Súc sanh."
+    },
+    {
+        id: 25,
+        q: "Câu 25: Thập thiện nghiệp được phân bổ theo Thân – Khẩu – Ý như thế nào?",
+        options: [
+            "Thân 3 nghiệp lành (Không sát sanh, trộm cắp, tà dâm); Khẩu 4 nghiệp lành (Không nói dối, lưỡi đôi chiều, thêu dệt, ác khẩu); Ý 3 nghiệp lành (Không tham, sân, si)",
+            "Thân 4 nghiệp lành; Khẩu 3 nghiệp lành; Ý 3 nghiệp lành",
+            "Thân 3 nghiệp lành; Khẩu 3 nghiệp lành; Ý 4 nghiệp lành",
+            "Thân 5 nghiệp lành; Khẩu 3 nghiệp lành; Ý 2 nghiệp lành"
+        ],
+        correct: 0,
+        explain: "Thập thiện gồm: Thân (3): không sát sanh, không trộm cắp, không tà dâm; Khẩu (4): không nói dối, không nói lưỡi đôi chiều, không nói thêu dệt, không nói lời hung ác; Ý (3): không tham, không sân, không si."
+    },
+    {
+        id: 26,
+        q: "Câu 26: Tu tập Thập thiện nghiệp đem lại lợi ích gì cho đời hiện tại và đời sau?",
+        options: [
+            "Hiện tại thân tâm an lạc, được kính mến, phước huệ tăng trưởng; đời sau khỏi đọa 3 đường ác, sanh lên cõi Trời/Người và là nhân chánh chứng quả Phật",
+            "Chỉ giúp có nhiều tiền của ở đời hiện tại nhưng không giúp ích gì cho đời sau",
+            "Chỉ có phước báo ở đời sau chứ hiện tại phải chịu nhiều thiệt thòi khổ sở",
+            "Giúp đắc thần thông bay lượn ngay tức khắc"
+        ],
+        correct: 0,
+        explain: "Tu Thập thiện giúp hiện tại thân tâm an lạc, khỏe mạnh, phước huệ tăng trưởng; đời sau thoát 3 đường ác, sanh cõi Người/Trời và làm nhân chánh tiến tới Phật quả."
+    },
+    {
+        id: 27,
+        q: "Câu 27: Tứ nhiếp pháp (4 phương pháp lợi tha để thu phục chúng sanh quay về Phật pháp) gồm những pháp nào?",
+        options: [
+            "Bố thí nhiếp, Ái ngữ nhiếp, Lợi hành nhiếp và Đồng sự nhiếp",
+            "Khổ đế, Tập đế, Diệt đế và Đạo đế",
+            "Từ vô lượng, Bi vô lượng, Hỷ vô lượng và Xả vô lượng",
+            "Dục như ý túc, Tinh tấn như ý túc, Nhất tâm như ý túc và Quán như ý túc"
+        ],
+        correct: 0,
+        explain: "Tứ nhiếp pháp gồm: 1. Bố thí nhiếp; 2. Ái ngữ nhiếp; 3. Lợi hành nhiếp; 4. Đồng sự nhiếp."
+    },
+    {
+        id: 28,
+        q: "Câu 28: Bố thí gồm có 3 loại nào?",
+        options: [
+            "Tài thí (Ngoại tài & Nội tài), Pháp thí và Vô úy thí",
+            "Kim thí, Ngân thí và Thực thí",
+            "Thân thí, Khẩu thí và Ý thí",
+            "Thượng thí, Trung thí và Hạ thí"
+        ],
+        correct: 0,
+        explain: "Bố thí có 3 phần: 1. Tài thí (tiền của vật chất là ngoại tài; thân thể công sức là nội tài); 2. Pháp thí (giảng dạy giáo pháp, dạy nghề); 3. Vô úy thí (đem lại sự không sợ hãi, che chở bảo vệ)."
+    },
+    {
+        id: 29,
+        q: "Câu 29: Sáu pháp cư xử hòa hợp trong 'Lục hòa' bao gồm những pháp nào?",
+        options: [
+            "Thân hòa đồng trú, Khẩu hòa vô tranh, Ý hòa đồng duyệt, Giới hòa đồng tu, Kiến hòa đồng giải và Lợi hòa đồng quân",
+            "Bố thí, Trì giới, Nhẫn nhục, Tinh tấn, Thiền định và Trí tuệ",
+            "Nhãn hòa, Nhĩ hòa, Tỷ hòa, Thiệt hòa, Thân hòa và Ý hòa",
+            "Cha con hòa, Vợ chồng hòa, Anh em hòa, Thầy trò hòa, Bạn bè hòa và Xóm giềng hòa"
+        ],
+        correct: 0,
+        explain: "Lục hòa gồm: 1. Thân hòa đồng trú; 2. Khẩu hòa vô tranh; 3. Ý hòa đồng duyệt; 4. Giới hòa đồng tu; 5. Kiến hòa đồng giải; 6. Lợi hòa đồng quân."
+    },
+    {
+        id: 30,
+        q: "Câu 30: Người tu theo pháp môn Tịnh độ cần phải hội đủ 3 điều kiện căn bản (Tam tư lương) nào?",
+        options: [
+            "Tín (lòng tin chắc chắn), Nguyện (chí nguyện vững vàng quyết về Tịnh độ) và Hành (trì niệm danh hiệu Đức Phật A-di-đà không xao lãng)",
+            "Văn tuệ, Tư tuệ và Tu tuệ",
+            "Bi, Trí và Dũng",
+            "Tác pháp, Thủ tướng và Vô sanh"
+        ],
+        correct: 0,
+        explain: "Người tu Tịnh độ phải có đủ 3 điều kiện là Tín (tin chắc chắn), Nguyện (chí nguyện vãng sanh không thối chuyển) và Hành (luôn trì niệm danh hiệu Đức Phật A-di-đà)."
+    }
+];
+
+// Quản lý trạng thái thuộc bài (Lưu vào LocalStorage riêng cho phần II: Giáo Lý)
+let masteredSet = new Set(JSON.parse(localStorage.getItem('sadi_giaoly_mastered') || '[]'));
+let hideAllAnswers = false;
+let showOnlyUnmastered = false;
+
+function saveMastery() {
+    localStorage.setItem('sadi_giaoly_mastered', JSON.stringify([...masteredSet]));
+    updateMasteryBar();
+}
+
+function updateMasteryBar() {
+    const count = masteredSet.size;
+    document.getElementById('mastery-count').innerText = `${count} / ${QA_DATA.length}`;
+    document.getElementById('mastery-fill').style.width = `${(count / QA_DATA.length) * 100}%`;
+}
+
+function resetMastery() {
+    if (confirm("Bạn muốn đặt lại tiến độ đánh dấu đã thuộc về 0?")) {
+        masteredSet.clear();
+        saveMastery();
+        renderStudyList();
+        updateFlashcardUI();
+    }
+}
+
+// Chuyển đổi Tab
+function switchMode(mode, btn) {
+    document.querySelectorAll('.mode-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('mode-' + mode).classList.add('active');
+    btn.classList.add('active');
+    if (mode === 'flashcard') updateFlashcardUI();
+}
+
+// CHẾ ĐỘ 1: HIỂN THỊ ĐỀ CƯƠNG
+function renderStudyList() {
+    const query = document.getElementById('search-box').value.toLowerCase().trim();
+    const container = document.getElementById('study-container');
+    container.innerHTML = '';
+
+    QA_DATA.forEach(item => {
+        const isMastered = masteredSet.has(item.id);
+        if (showOnlyUnmastered && isMastered) return;
+
+        const matchText = (item.q + ' ' + item.a + ' ' + item.kw).toLowerCase();
+        if (query && !matchText.includes(query)) return;
+
+        const card = document.createElement('div');
+        card.className = `qa-card ${isMastered ? 'mastered' : ''}`;
+        card.innerHTML = `
+            <div class="qa-header">
+                <div class="qa-question">${item.q}</div>
+                <button class="master-toggle" onclick="toggleMastery(${item.id})">
+                    ${isMastered ? '✅ Đã thuộc' : '⭕ Đánh dấu thuộc'}
+                </button>
+            </div>
+            <div class="qa-answer ${hideAllAnswers ? 'hidden-ans' : ''}" onclick="this.classList.toggle('hidden-ans')" title="Nhấp để ẩn/hiện đáp án câu này">
+                <div>${item.a}</div>
+                <div class="keyword-box">🔑 <strong>Từ khóa nhớ nhanh:</strong> ${item.kw}</div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function toggleMastery(id) {
+    if (masteredSet.has(id)) masteredSet.delete(id);
+    else masteredSet.add(id);
+    saveMastery();
+    renderStudyList();
+}
+
+function toggleAllAnswers() {
+    hideAllAnswers = !hideAllAnswers;
+    const btn = document.getElementById('btn-toggle-ans');
+    btn.innerText = hideAllAnswers ? '👁️ Hiện tất cả đáp án' : '🙈 Ẩn đáp án để tự dò bài';
+    renderStudyList();
+}
+
+function filterUnmastered() {
+    showOnlyUnmastered = !showOnlyUnmastered;
+    const btn = document.getElementById('btn-filter-unmastered');
+    btn.style.borderColor = showOnlyUnmastered ? 'var(--gold)' : '';
+    btn.innerText = showOnlyUnmastered ? `📋 Hiện tất cả ${QA_DATA.length} câu` : '📌 Chỉ hiện câu chưa thuộc';
+    renderStudyList();
+}
+
+// CHẾ ĐỘ 2: FLASHCARD 3D
+let fcIndex = 0;
+
+function updateFlashcardUI() {
+    const scene = document.getElementById('fc-scene');
+    scene.classList.remove('is-flipped');
+    const item = QA_DATA[fcIndex];
+    setTimeout(() => {
+        document.getElementById('fc-counter').innerText = `CÂU ${fcIndex + 1} / ${QA_DATA.length} (Nhấp vào thẻ hoặc phím Space để lật)`;
+        document.getElementById('fc-question').innerText = item.q;
+        document.getElementById('fc-hint').innerHTML = `💡 Gợi ý từ khóa: <strong>${item.kw}</strong>`;
+        document.getElementById('fc-answer').innerHTML = item.a;
+        const mBtn = document.getElementById('fc-master-btn');
+        if (masteredSet.has(item.id)) {
+            mBtn.innerText = '✅ Đã thuộc câu này';
+            mBtn.style.borderColor = 'var(--emerald)';
+            mBtn.style.color = 'var(--emerald)';
+        } else {
+            mBtn.innerText = '⭕ Đánh dấu Đã thuộc';
+            mBtn.style.borderColor = '';
+            mBtn.style.color = '';
+        }
+    }, 150);
+}
+
+function flipCard() {
+    document.getElementById('fc-scene').classList.toggle('is-flipped');
+}
+
+function nextCard() {
+    fcIndex = (fcIndex + 1) % QA_DATA.length;
+    updateFlashcardUI();
+}
+
+function prevCard() {
+    fcIndex = (fcIndex - 1 + QA_DATA.length) % QA_DATA.length;
+    updateFlashcardUI();
+}
+
+function randomCard() {
+    fcIndex = Math.floor(Math.random() * QA_DATA.length);
+    updateFlashcardUI();
+}
+
+function toggleCurrentCardMastery() {
+    const id = QA_DATA[fcIndex].id;
+    toggleMastery(id);
+    updateFlashcardUI();
+}
+
+// CHẾ ĐỘ 3: TRÒ CHƠI ĐẤU TRƯỜNG TRÍ TUỆ (30 CÂU HỎI)
+let quizOrder = [];
+let quizCursor = 0;
+let score = 0;
+let streak = 0;
+let bestScore = parseInt(localStorage.getItem('sadi_giaoly_best_score') || '0', 10);
+
+function shuffleArray(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+}
+
+function startNewGame() {
+    quizOrder = shuffleArray(QUIZ_BANK);
+    quizCursor = 0;
+    score = 0;
+    streak = 0;
+    document.getElementById('game-best').innerText = bestScore;
+    loadQuizQuestion();
+}
+
+function loadQuizQuestion() {
+    if (quizCursor >= quizOrder.length) {
+        document.getElementById('quiz-question').innerHTML = `🎉 CHÚC MỪNG BẠN ĐÃ HOÀN THÀNH 30 CÂU THỬ THÁCH GIÁO LÝ CĂN BẢN!<br><span style="color:var(--gold);font-size:1.3rem;">Tổng điểm: ${score} điểm</span>`;
+        document.getElementById('quiz-options').innerHTML = '';
+        document.getElementById('quiz-feedback').style.display = 'none';
+        document.getElementById('btn-next-quiz').style.display = 'none';
+        return;
+    }
+
+    const currentItem = quizOrder[quizCursor];
+    document.getElementById('game-q-num').innerText = `${quizCursor + 1} / ${quizOrder.length}`;
+    document.getElementById('game-score').innerText = score;
+    document.getElementById('game-streak').innerText = `🔥 ${streak}`;
+    document.getElementById('quiz-question').innerText = currentItem.q;
+    document.getElementById('quiz-feedback').style.display = 'none';
+    document.getElementById('btn-next-quiz').style.display = 'none';
+
+    const indexedOptions = currentItem.options.map((text, idx) => ({
+        text,
+        isCorrect: idx === currentItem.correct
+    }));
+    const shuffledOpts = shuffleArray(indexedOptions);
+
+    const optContainer = document.getElementById('quiz-options');
+    optContainer.innerHTML = '';
+    const labels = ['A', 'B', 'C', 'D'];
+
+    shuffledOpts.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerHTML = `<strong>${labels[i]}.</strong> ${opt.text}`;
+        btn.onclick = () => selectAnswer(btn, opt.isCorrect, currentItem);
+        optContainer.appendChild(btn);
+    });
+}
+
+function selectAnswer(selectedBtn, isCorrect, item) {
+    const allBtns = document.querySelectorAll('.opt-btn');
+    allBtns.forEach(b => b.disabled = true);
+
+    const fb = document.getElementById('quiz-feedback');
+    fb.style.display = 'block';
+
+    if (isCorrect) {
+        selectedBtn.classList.add('correct');
+        streak++;
+        const gained = 10 + (streak > 1 ? streak * 2 : 0);
+        score += gained;
+        if (score > bestScore) {
+            bestScore = score;
+            localStorage.setItem('sadi_giaoly_best_score', bestScore);
+            document.getElementById('game-best').innerText = bestScore;
+        }
+        if (item.id <= QA_DATA.length) {
+            masteredSet.add(item.id);
+            saveMastery();
+            renderStudyList();
+        }
+        fb.innerHTML = `<strong style="color:var(--emerald);">✅ Chính xác! (+${gained} điểm)</strong><br>${item.explain}`;
+    } else {
+        selectedBtn.classList.add('wrong');
+        streak = 0;
+        allBtns.forEach(b => {
+            if (b.innerText.includes(item.options[item.correct])) {
+                b.classList.add('correct');
+            }
+        });
+        fb.innerHTML = `<strong style="color:var(--crimson);">❌ Chưa chính xác! Ghi nhớ:</strong><br>${item.explain}`;
+    }
+
+    document.getElementById('game-score').innerText = score;
+    document.getElementById('game-streak').innerText = `🔥 ${streak}`;
+    document.getElementById('btn-next-quiz').style.display = 'inline-block';
+}
+
+function nextQuizQuestion() {
+    quizCursor++;
+    loadQuizQuestion();
+}
+
+// Phím tắt cho Flashcard
+document.addEventListener('keydown', (e) => {
+    const fcActive = document.getElementById('mode-flashcard').classList.contains('active');
+    if (!fcActive) return;
+    if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+    if (e.code === 'ArrowRight') nextCard();
+    if (e.code === 'ArrowLeft') prevCard();
+});
+
+// HIỆU ỨNG BACKGROUND VŨ TRỤ SAO CHUYỂN ĐỘNG (CANVAS)
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function initStars() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({ length: 180 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.6 + 0.3,
+        speed: Math.random() * 0.35 + 0.08
+    }));
+}
+
+function animateStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+        s.y -= s.speed;
+        if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; }
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.4 + Math.abs(Math.sin(Date.now() * 0.001 + s.x)) * 0.6})`;
+        ctx.fill();
+    });
+    requestAnimationFrame(animateStars);
+}
+
+window.addEventListener('resize', initStars);
+
+// Khởi chạy ứng dụng
+window.onload = () => {
+    initStars();
+    animateStars();
+    updateMasteryBar();
+    renderStudyList();
+    updateFlashcardUI();
+    startNewGame();
+};
+</script>
+</body>
+</html>
